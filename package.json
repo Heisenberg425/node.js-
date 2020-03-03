@@ -1,0 +1,19 @@
+{
+  "name": "music-player",
+  "version": "1.0.0",
+  "description": "一个简单的音乐播放器",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo\"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "heisenberg",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap":"^4.4.1",
+    "formidable":"^1.2.2",
+    "underscore":"^1.9.2"
+  },
+  "devDependencies": {},
+  "keywords": []
+}

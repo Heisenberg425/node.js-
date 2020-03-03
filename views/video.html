@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="iconfont/iconfont.css">
+    <title></title>
+    <style>
+        /* ID选择器：ID选择器的名称以符号“#”开头，会影响页面中id属性值相同的元素
+        （区分大小写，且id属性值应该是唯一的）。 */
+        #video {
+            width: 700px;
+            height: 450px;
+            margin: 0 auto;
+            border: 1px solid silver;
+        }
+
+        #mp4par {
+            position: relative;
+            width: 700px;
+            height: 450px;
+            background-color: black;
+            float: left;
+            overflow: hidden;
+        }
+        #mp4 {
+            position: relative;
+            width: 700px;
+            height: 450px;
+        }
+        #controls {
+            position: absolute;
+            width: 700px;
+            height: 75px;
+            bottom: -75px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.31);
+            text-align: center;
+            transition: all 0.3s ease-in;
+        }
+        #mp4par:hover #controls{
+            bottom: 0;
+        }
+        #btntime {
+            width: 700px;
+            outline: none;
+        }
+        #btnsound {
+            position: relative;
+            top: 5px;
+        }
+        button {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            /* border-radius: 50%; */
+            outline: none;
+            border-style: none;
+            /* background: radial-gradient(#ffae9f, #ff2f39); */
+            margin: 18px;
+            color: #474747;
+        }
+        .iconfont {
+            font-size: 24px;
+            color: #474747;
+        }
+    </style>
+</head>
+<body>
+<div id="video">
+    <div id="mp4par">
+        <video id="mp4" src="1.mp4"></video>
+        <div id="controls">
+            <input type="range" id="btntime" value="0" max="100"><br>
+            <span id="current_time" style='font-size: 12px;'>00:00:00</span>
+            <button id="btnstart" >播放</button>
+            <button id="btngo" >快进</button>
+            <button id="btnback" >快退</button>
+            <button id="btnmute" >静音</button>
+            <input type="range" id="btnsound" value="10" max="100">
+            <button id="btnbig">全屏</button>
+            <span id="totaltime" style='font-size: 12px;'>00:00:00</span>
+            <!-- <button><i class="iconfont">&#xe638;</i></button> -->
+        </div>
+    </div>
+</div>
+<script>
+    var video = document.getElementById("mp4");
+    var btnstart = document.getElementById("btnstart");
+    var current_time=document.getElementById('current_time');
+    var btntime = document.getElementById("btntime");
+    var btngo = document.getElementById("btngo");
+    var btnback = document.getElementById("btnback");
+    var btnmute=document.getElementById("btnmute");
+    var btnsound=document.getElementById("btnsound");
+    var btnbig=document.getElementById("btnbig");
+    var totaltime=document.getElementById('totaltime');
+    //视频开始播放时执行
+    video.onplaying = function () {
+        //获取当前video的总时间
+        var allTime = video.duration;
+        var h=Math.floor(allTime/3600);
+        var m=Math.floor(allTime%3600/60);
+        var s=Math.floor(allTime%60);
+        h=h>=10?h:'0'+h;
+        m=m>=10?m:'0'+m;
+        s=s>=10?s:'0'+s;
+        totaltime.innerHTML=h+':'+m+':'+s;//allTime.toString();
+    };
+    //视频播放位置发生变化时开始执行
+    video.ontimeupdate = function () {
+        btntime.value =100*this.currentTime/this.duration;///this.totaltime;
+        var time=this.currentTime;
+        var h=Math.floor(time/3600);
+        var m=Math.floor(time%3600/60);
+        var s=Math.floor(time%60);
+        h=h>=10?h:'0'+h;
+        m=m>=10?m:'0'+m;
+        s=s>=10?s:'0'+s;
+        current_time.innerHTML=h+':'+m+':'+s;
+    };
+
+    //播放进度条的事件
+    btntime.addEventListener("mousedown",function(){
+        this.onmousemove=function(){
+            video.currentTime=this.value*video.duration/100;
+        }
+        this.onmouseup=function(){
+            this.onmousemove=null;
+            this.onmouseup=null;
+        }
+    });
+
+    //快进的点击事件
+    btngo.addEventListener("click", function () {
+        btnstart.innerHTML = "播放";
+        video.pause();
+        time = setInterval(function () {
+            video.currentTime += 5;
+        }, 1000);
+    });
+    //快退的点击事件
+    btnback.addEventListener("click", function () {
+        btnstart.innerHTML = "播放";
+        video.pause();
+        time = setInterval(function () {
+            video.currentTime -= 2;
+            if (video.currentTime <= 0) {
+                video.play();
+                clearInterval(time);
+            }
+        }, 1000);
+    });
+    //静音的点击事件
+    btnmute.addEventListener("click",function(){
+        video.muted=!video.muted;
+    });
+    //音量进度条的事件
+    btnsound.addEventListener("mousedown",function(){
+        this.onmousemove=function(){
+            video.volume=this.value/100;
+        }
+        this.onmouseup=function(){
+            this.onmousemove=null;
+            this.onmouseup=null;
+        }
+    });
+    //全屏的点击事件
+    btnbig.addEventListener("click",function(){
+        if (video.webkitRequestFullScreen) {
+            video.webkitRequestFullScreen();
+        }
+        else if (video.mozRequestFullScreen) {
+            video.mozRequestFullScreen();
+        }
+        else if (video.msRequestFullScreen) {
+            video.msRequestFullScreen();
+        }
+        else if (video.RequestFullScreen) {
+            video.RequestFullScreen();
+        }
+    });
+    //播放的点击事件
+    btnstart.addEventListener("click", function () {
+        if (this.innerHTML == "播放") {
+            video.play();
+            this.innerHTML = "暂停";
+        }
+        else {
+            video.pause();
+            this.innerHTML = "播放";
+        }
+        clearInterval(time);
+    })
+</script>
+</body>
+</html>
