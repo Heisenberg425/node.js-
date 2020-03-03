@@ -12,3 +12,4 @@ module.exports={<br>
     uploadPath:path.join(__dirname,'uploads')<br>
 }<br>
 只要在浏览器地址框输入：http://192.168.0.13:3000/即可访问。
+![image](https://github.com/Heisenberg425/node.js-/blob/master/show/%E6%89%B9%E6%B3%A8%202020-03-03%20102613.jpg)
