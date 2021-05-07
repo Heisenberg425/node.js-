@@ -12,7 +12,7 @@
   "dependencies": {
     "bootstrap":"^4.4.1",
     "formidable":"^1.2.2",
-    "underscore":"^1.9.2"
+    "underscore":"^1.12.1"
   },
   "devDependencies": {},
   "keywords": []
